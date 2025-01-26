@@ -122,6 +122,13 @@ namespace BP.WavePool
             }
 
             var waveItem = GetAvailableWaveItem();
+
+            if (waveItem == null)
+            {
+                Debug.LogWarning("WavePool: No available wave sources. Can't play wave.");
+                return;
+            }
+
             waveItem.Source.transform.position = position;
             waveItem.Play(sourceData);
         }

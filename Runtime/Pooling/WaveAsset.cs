@@ -3,7 +3,7 @@ using UnityEngine.Audio;
 
 namespace BP.WavePool
 {
-    [CreateAssetMenu(fileName = "WaveSound", menuName = "WavePool/WaveSoundAsset")]
+    [CreateAssetMenu(fileName = "WaveAsset", menuName = "Wave Pool/Wave Asset")]
     public class WaveAsset : ScriptableObject
     {
         [SerializeField] private AudioResource resource;
