@@ -1,13 +1,13 @@
 using UnityEngine;
 
-namespace BP.WavePool
+namespace BP.OneShotSFX
 {
-    public class WavePlayer : MonoBehaviour
+    public class OneShotPlayer : MonoBehaviour
     {
-        [SerializeField] private WaveAsset waveAsset;
+        [SerializeField] private OneShotAsset waveAsset;
         [SerializeField] private bool playOnStart;
 
-        public WaveAsset WaveAsset
+        public OneShotAsset WaveAsset
         {
             get => waveAsset;
             set => waveAsset = value;
@@ -23,7 +23,7 @@ namespace BP.WavePool
 
         public void Play()
         {
-            WavePool.PlayWave(waveAsset, transform.position);
+            OneShotPool.PlayWave(waveAsset, transform.position);
         }
     }
 }

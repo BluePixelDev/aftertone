@@ -1,6 +1,6 @@
 {
-    "name": "BP.WavePool",
-    "rootNamespace": "BP.WavePool",
+    "name": "BP.OneShotSFX",
+    "rootNamespace": "BP.OneshotSFX",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

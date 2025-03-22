@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace BP.WavePool
+namespace BP.OneShotSFX
 {
-    public class WavePoolConfig : ScriptableObject
+    public class OneShotSFXConfig : ScriptableObject
     {
         [SerializeField] private bool initializeOnLoad = true;
         [SerializeField, Min(0)] private int initialWaveCapacity = 10;

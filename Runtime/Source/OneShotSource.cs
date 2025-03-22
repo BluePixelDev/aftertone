@@ -1,13 +1,17 @@
 using UnityEngine;
 
-namespace BP.WavePool
+namespace BP.OneShotSFX
 {
-    public class WaveSource : MonoBehaviour, IWaveSource
+    public class OneShotSource : MonoBehaviour, IOneShotSource
     {
         [SerializeField] private AudioSource audioSource;
 
         public bool IsPlaying => audioSource.isPlaying;
-        public AudioSource Source => audioSource;
+        public AudioSource Source
+        {
+            get => audioSource;
+            set => audioSource = value;
+        }
 
         private void LateUpdate()
         {
@@ -17,10 +21,10 @@ namespace BP.WavePool
             }
         }
 
-        public void Play(WaveSourceData data)
+        public void Play(OneShotAsset asset)
         {
             gameObject.SetActive(true);
-            audioSource.SetSourceData(data);
+            asset.CopyToSource(Source);
             audioSource.Play();
         }
         public void Stop() => audioSource.Stop();

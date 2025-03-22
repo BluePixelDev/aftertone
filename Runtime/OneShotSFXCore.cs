@@ -1,19 +1,19 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace BP.WavePool
+namespace BP.OneShotSFX
 {
 #if UNITY_EDITOR
-    [InitializeOnLoad] // Ensures initialization in the Editor
+    [InitializeOnLoad]
 #endif
-    public static class WavePoolSystem
+    public static class OneShotSFXCore
     {
-        public static WavePoolConfig Config { get; private set; }
+        public static OneShotSFXConfig Config { get; private set; }
 
-        private const string ConfigName = "WavePoolConfig";
+        private const string ConfigName = "OneShotSFXConfig";
         private const string ConfigPath = "Assets/Resources/";
 
-        static WavePoolSystem()
+        static OneShotSFXCore()
         {
             Initialize();
         }
@@ -28,7 +28,7 @@ namespace BP.WavePool
 
             if (Application.isPlaying && Config.InitializeOnLoad)
             {
-                CreateWavePool();
+                CreatePool();
             }
         }
 
@@ -38,11 +38,11 @@ namespace BP.WavePool
         private static void LoadOrCreateConfig()
         {
             // Load the existing configuration from Resources
-            Config = Resources.Load<WavePoolConfig>(ConfigName);
+            Config = Resources.Load<OneShotSFXConfig>(ConfigName);
 
             if (Config == null)
             {
-                Debug.LogWarning("WavePoolSystem: Configuration not found. Creating a new configuration asset.");
+                Debug.LogWarning("OneShotSFX: Configuration not found. Creating a new configuration asset.");
                 CreateConfigAsset();
             }
         }
@@ -51,33 +51,26 @@ namespace BP.WavePool
         /// Creates the WavePool GameObject in the scene.
         /// </summary>
         /// <returns>The created WavePool GameObject.</returns>
-        public static GameObject CreateWavePool()
+        public static GameObject CreatePool()
         {
-            if (Object.FindFirstObjectByType<WavePool>() != null)
+            if (Object.FindFirstObjectByType<OneShotPool>() != null)
             {
-                Debug.LogWarning("WavePoolSystem: A WavePool instance already exists in the scene.");
+                Debug.LogWarning("OneShotSFX: A WavePool instance already exists in the scene.");
                 return null;
             }
 
-            return new GameObject("WavePool", typeof(WavePool));
+            return new GameObject("OneShotSFX", typeof(OneShotPool));
         }
 
-        /// <summary>
-        /// Creates a new WavePoolConfig asset in the Resources folder.
-        /// </summary>
         private static void CreateConfigAsset()
         {
 #if UNITY_EDITOR
-            // Create a new instance of the WavePoolConfig ScriptableObject
-            Config = ScriptableObject.CreateInstance<WavePoolConfig>();
-
-            // Ensure the Resources directory exists
+            Config = ScriptableObject.CreateInstance<OneShotSFXConfig>();
             if (!AssetDatabase.IsValidFolder(ConfigPath.TrimEnd('/')))
             {
                 AssetDatabase.CreateFolder("Assets", "Resources");
             }
 
-            // Save the new configuration as an asset
             string fullPath = ConfigPath + ConfigName + ".asset";
             AssetDatabase.CreateAsset(Config, fullPath);
             AssetDatabase.SaveAssets();

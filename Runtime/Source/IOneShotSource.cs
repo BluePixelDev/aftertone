@@ -1,12 +1,12 @@
 using UnityEngine;
 
-namespace BP.WavePool
+namespace BP.OneShotSFX
 {
-    public interface IWaveSource
+    public interface IOneShotSource
     {
         public bool IsPlaying { get; }
         public AudioSource Source { get; }
-        public void Play(WaveSourceData data);
+        public void Play(OneShotAsset data);
         public void Stop();
     }
 }

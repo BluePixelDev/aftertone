@@ -1,41 +1,36 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Audio;
 
-namespace BP.WavePool
+namespace BP.OneShotSFX
 {
     /// <summary>
     /// A pool for audio sources that can be played in the scene.
     /// Loads prefab from Resources folder.
     /// Automatically initializes itself upon request.
     /// </summary>
-    public class WavePool : MonoBehaviour
+    public class OneShotPool : MonoBehaviour
     {
         // Singleton
-        public static WavePool Instance
+        public static OneShotPool Instance
         {
             get
             {
-                if (instance == null) WavePoolSystem.CreateWavePool();
+                if (instance == null) OneShotSFXCore.CreatePool();
                 return instance;
             }
         }
-        private static WavePool instance;
+        private static OneShotPool instance;
 
         // Pool
-        private readonly List<IWaveSource> pool = new();
+        private readonly List<IOneShotSource> pool = new();
         public int PoolCount => pool.Count;
-
-        // Prefab
-        private GameObject waveSourcePrefab;
 
         private void Awake()
         {
             if (instance == null)
             {
                 instance = this;
-                waveSourcePrefab = Resources.Load<GameObject>("WaveSource");
                 DontDestroyOnLoad(gameObject);
                 InitializePool();
             }
@@ -50,7 +45,7 @@ namespace BP.WavePool
         /// </summary>
         private void InitializePool()
         {
-            var config = WavePoolSystem.Config;
+            var config = OneShotSFXCore.Config;
             for (int i = 0; i < config.InitialWaveCapacity; i++)
             {
                 AddWaveItemToPool();
@@ -61,7 +56,7 @@ namespace BP.WavePool
         /// Retrieves an available wave source from the pool or creates more if necessary.
         /// </summary>
         /// <returns>An available wave source.</returns>
-        private IWaveSource GetAvailableWaveItem()
+        private IOneShotSource GetAvailableWaveItem()
         {
             foreach (var item in pool)
             {
@@ -71,27 +66,30 @@ namespace BP.WavePool
                 }
             }
 
-            if (pool.Count >= WavePoolSystem.Config.MaxWaveCapacity)
+            if (pool.Count >= OneShotSFXCore.Config.MaxWaveCapacity)
             {
                 Debug.LogWarning("WavePool: Reached max capacity. Can't create more waves.");
                 return null;
             }
 
-            return CreateBatch(WavePoolSystem.Config.WaveCapacityIncrement).FirstOrDefault();
+            return CreateBatch(OneShotSFXCore.Config.WaveCapacityIncrement).FirstOrDefault();
         }
 
         /// <summary>
         /// Adds a new wave source to the pool.
         /// </summary>
         /// <returns>The newly created wave source.</returns>
-        private IWaveSource AddWaveItemToPool()
+        private IOneShotSource AddWaveItemToPool()
         {
-            GameObject obj = Instantiate(waveSourcePrefab, transform);
-            obj.name = $"Source #{pool.Count}";
-            var waveItem = obj.GetComponent<IWaveSource>();
+            GameObject obj = new($"Source #{pool.Count}");
+            var audioSource = obj.AddComponent<AudioSource>();
+            var oneShotSource = obj.AddComponent<OneShotSource>();
+            oneShotSource.Source = audioSource;
+
+            obj.transform.SetParent(transform);
             obj.SetActive(false);
-            pool.Add(waveItem);
-            return waveItem;
+            pool.Add(oneShotSource);
+            return oneShotSource;
         }
 
         /// <summary>
@@ -99,9 +97,9 @@ namespace BP.WavePool
         /// </summary>
         /// <param name="count">Number of wave sources to create.</param>
         /// <returns>The created wave sources.</returns>
-        private IWaveSource[] CreateBatch(int count)
+        private IOneShotSource[] CreateBatch(int count)
         {
-            IWaveSource[] batch = new IWaveSource[count];
+            IOneShotSource[] batch = new IOneShotSource[count];
             for (int i = 0; i < count; i++)
             {
                 batch[i] = AddWaveItemToPool();
@@ -113,11 +111,11 @@ namespace BP.WavePool
         /// <summary>
         /// Plays a wave using the given WaveSourceData.
         /// </summary>
-        private void PlayWaveInternal(WaveSourceData sourceData, Vector3 position)
+        private void PlayWaveInternal(OneShotAsset asset, Vector3 position)
         {
-            if (sourceData.audioResource == null)
+            if (asset == null)
             {
-                Debug.LogWarning("WavePool: AudioResource is null. Can't play wave.");
+                Debug.LogWarning("OneShotPool: Asset is null. Can't play sound.");
                 return;
             }
 
@@ -125,34 +123,21 @@ namespace BP.WavePool
 
             if (waveItem == null)
             {
-                Debug.LogWarning("WavePool: No available wave sources. Can't play wave.");
+                Debug.LogWarning("OneShotPool: No available sources. Can't play sound.");
                 return;
             }
 
             waveItem.Source.transform.position = position;
-            waveItem.Play(sourceData);
+            waveItem.Play(asset);
         }
 
         #region PUBLIC API
         /// <summary>
-        /// Plays a wave using WaveSourceData.
-        /// </summary>
-        public static void PlayWave(WaveSourceData sourceData, Vector3 position) => Instance.PlayWaveInternal(sourceData, position);
-        /// <summary>
         /// Plays a wave using a WaveAsset and a position.
         /// </summary>
-        public static void PlayWave(WaveAsset waveAsset, Vector3 position)
+        public static void PlayWave(OneShotAsset waveAsset, Vector3 position)
         {
-            var sourceData = waveAsset.ConvertToSourceData();
-            Instance.PlayWaveInternal(sourceData, position);
-        }
-        /// <summary>
-        /// Plays a wave using an AudioResource and a position.
-        /// </summary>
-        public static void PlayWave(AudioResource resource, Vector3 position)
-        {
-            var sourceData = new WaveSourceData(resource);
-            Instance.PlayWaveInternal(sourceData, position);
+            Instance.PlayWaveInternal(waveAsset, position);
         }
         /// <summary>
         /// Stops all currently playing waves.
