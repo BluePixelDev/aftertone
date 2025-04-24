@@ -1,2 +1,0 @@
-# Wave Pool
-Wave Pool is a Unity plugin designed for efficient and reusable audio management. It provides a system for creating and recycling temporary, one-off audio sources, ensuring optimized performance and streamlined audio handling. Whether you're triggering sound effects, ambient cues, or short audio clips, Wave Pool helps you avoid unnecessary overhead by reusing audio components instead of repeatedly creating and destroying them. 
