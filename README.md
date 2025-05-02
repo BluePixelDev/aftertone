@@ -1,24 +1,69 @@
-# 🎵 OneShotSFX
-**OneShotSFX** is a Unity plugin designed for efficient audio source management. Instead of repeatedly creating and destroying temporary audio sources (e.g., for SFX, ambient sounds, UI interactions), Wave Pool reuses pooled sources — saving performance and making audio playback seamless.
+# SoundSnap
 
-# ⚡Features
-- 🎛️ **ScriptableObject-Based Configuration** <br>
-  Define audio behavior through reusable, configurable assets.
-- 🎚️ **Drag & Drop Configuration** <br>
-  Drop a real AudioSource into the asset inspector — auto-configures settings for you.
+[![GitHub Repo stars](https://img.shields.io/github/stars/BluePixelDev/sound-snap?style=flat-square)](https://github.com/BluePixelDev/sound-snap/stargazers)
+[![GitHub last commit](https://img.shields.io/github/last-commit/BluePixelDev/sound-snap?style=flat-square)](https://github.com/BluePixelDev/sound-snap/commits/main)
 
-- 🌀 **Pooled Audio Resource System** <br>
-Instantiates and reuses audio sources with zero garbage generation.
+**SoundSnap** is a modular and efficient audio playback system for Unity. It avoids the performance cost of instantiating and destroying audio sources by pooling reusable instances, making it ideal for sound effects, UI sounds, ambient audio, and more.
 
-- 📈 **Dynamic Scaling** <br>
-  Configure how many sources are created initially, max pool size, and how many to add when    more are needed.
+---
 
-- 🔄 **Scene-Aware Behavior** <br>
-  Audio sources are non-persistent by default and get flushed on scene load — configurable     in a separate PoolConfig asset.
+## Features
 
-- 🎲 **Advanced Randomization** <br>
-  Supports Unity’s new Audio Resources system:
-    Random pitch, volume, and audio clip selection.
+### ScriptableObject-Based Configuration
 
-- 🧩 **Extensible & Lightweight** <br>
-  Easily drop into any project and start using with minimal setup.
+Define reusable audio settings and playback parameters through `SnapAsset` objects. These assets support automatic configuration based on existing `AudioSource` components.
+
+### Intuitive Editor Integration
+
+Drag and drop a real `AudioSource` component into a `SnapAsset` to auto-fill all settings. Easily preview and test playback directly in the editor.
+
+### Pooled Audio Source System
+
+Avoid runtime garbage collection and minimize CPU overhead by pooling `AudioSource` instances. No more `GameObject.Instantiate` or `Destroy` calls for quick sounds.
+
+### Configurable Scaling
+
+Adjust initial pool size, maximum limits, and overflow handling using a centralized configuration asset (`SnapConfig`). Fine-tune performance to match your project's needs.
+
+### Scene Awareness
+
+By default, pooled objects are destroyed and recreated with each scene load. Optional settings allow persistent or scene-specific behavior.
+
+### Lightweight & Extensible
+
+SoundSnap is designed to be unobtrusive and modular. Drop it into your project and start using it immediately — or extend it with custom behavior.
+
+---
+
+## Getting Started
+
+1. Add the `SoundSnap` folder to your Unity project.
+2. Configure `SnapConfig` in `Resources`
+3. Create one or more `SnapAsset`s to define how each sound should behave.
+4. Use `SoundSnap.Play()` in your code, or add the `SnapPlayer` component to your GameObjects.
+5. Optional: Add `SnapTrigger3D` or `SnapTrigger2D` to automatically trigger sounds based on collisions or triggers.
+
+---
+
+## Example
+
+```csharp
+using BP.SoundSnap;
+...
+SoundSnap.Play(mySnapAsset, transform.position);
+```
+
+Or, attach a `SnapPlayer` component to a GameObject and call:
+
+```csharp
+mySnapPlayer.Play();
+```
+
+---
+
+## Folder Structure
+
+* `Runtime/` – Core system components (SnapAsset, SnapSource, SnapPool)
+* `Editor/` – Custom editor UI for configuration and previewing
+* `Tests/` – Unit tests for key systems
+* `Samples` - Basic examples of how to use SoundSnap
