@@ -5,14 +5,11 @@ namespace BP.SoundSnap
     [AddComponentMenu("SoundSnap/Snap Player")]
     public class SnapPlayer : MonoBehaviour
     {
-        [Header("Snap Settings")]
         [Tooltip("The SnapAsset to be played by this player.")]
         [SerializeField] private SnapAsset snapAsset;
 
         [Tooltip("If enabled, the SnapAsset will play automatically on Start.")]
         [SerializeField] private bool playOnStart;
-
-        [Header("Trigger")]
 
         /// <summary>
         /// Gets or sets the SnapAsset assigned to this player.
