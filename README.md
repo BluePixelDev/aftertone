@@ -1,7 +1,7 @@
 # SoundSnap
 
-[![GitHub Repo stars](https://img.shields.io/github/stars/BluePixelDev/sound-snap?style=flat-square)](https://github.com/BluePixelDev/sound-snap/stargazers)
-[![GitHub last commit](https://img.shields.io/github/last-commit/BluePixelDev/sound-snap?style=flat-square)](https://github.com/BluePixelDev/sound-snap/commits/main)
+[![GitHub Repo stars](https://img.shields.io/github/stars/BluePixelDev/soundsnap?style=flat-square)](https://github.com/BluePixelDev/sound-snap/stargazers)
+[![GitHub last commit](https://img.shields.io/github/last-commit/BluePixelDev/soundsnap?style=flat-square)](https://github.com/BluePixelDev/sound-snap/commits/main)
 
 **SoundSnap** is a modular and efficient audio playback system for Unity. It avoids the performance cost of instantiating and destroying audio sources by pooling reusable instances, making it ideal for sound effects, UI sounds, ambient audio, and more.
 
